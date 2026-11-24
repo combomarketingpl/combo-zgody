@@ -1,9 +1,10 @@
-/*! Combo Zgody 1.0.0 — baner zgód z Google Consent Mode v2. Combo Marketing, licencja MIT.
+/*! Combo Zgody 1.0.1 — baner zgód z Google Consent Mode v2. Combo Marketing, licencja MIT.
  *
  * Ładuje go szablon GTM „Combo – Zgody” (Consent Initialization), który wcześniej ustawia domyślne zgody
  * („denied”) i przywraca zapisany wybór. Ten plik tylko pokazuje baner, zapisuje wybór w ciasteczku
  * `combo_zgody` i wysyła `gtag('consent', 'update', …)`. Bez zależności, bez zewnętrznych zapytań.
- * Konfiguracja: window.ComboZgodyConfig = {policyUrl, color, textColor, position, texts{…}, days, version, button}.
+ * Konfiguracja: window.ComboZgodyConfig = {policyUrl, color, textColor, position, texts{…}, days, version, button,
+ *   eventName (zdarzenie dataLayer po wyborze; domyślnie combo_zgody_update)}.
  */
 (function () {
   "use strict";
@@ -12,6 +13,7 @@
   var NAME = "combo_zgody";
   var DAYS = +C.days || 180;
   var VERSION = String(C.version || "1");
+  var EVENT = /^[A-Za-z0-9_.-]{1,40}$/.test(C.eventName || "") ? C.eventName : "combo_zgody_update";
   var T = Object.assign({
     title: "Szanujemy Twoją prywatność",
     body: "Używamy plików cookie, żeby strona działała poprawnie, oraz — za Twoją zgodą — do analizy ruchu i dopasowania reklam. Zgodę możesz w każdej chwili zmienić.",
@@ -61,7 +63,9 @@
     gtag("consent", "update", {
       analytics_storage: g(v.a), ad_storage: g(v.m), ad_user_data: g(v.m), ad_personalization: g(v.m)
     });
-    window.dataLayer.push({ event: "combo_zgody_update", combo_zgody_analytics: !!v.a, combo_zgody_marketing: !!v.m });
+    // consent_analytics / consent_marketing: te same klucze co popularne banery — istniejące wyzwalacze dalej działają
+    window.dataLayer.push({ event: EVENT, combo_zgody_analytics: !!v.a, combo_zgody_marketing: !!v.m,
+                            consent_analytics: !!v.a, consent_marketing: !!v.m });
   }
 
   function el(tag, attrs, text) {

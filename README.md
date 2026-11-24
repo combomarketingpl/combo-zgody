@@ -10,8 +10,8 @@ Przygotowany przez Combo Marketing.
 
 Domyślny stan zgód (`denied`) ustawia szablon Google Tag Manager uruchamiany na „Consent Initialization”, który
 ładuje ten plik. Konfiguracja przez `window.ComboZgodyConfig` (`policyUrl`, `color`, `textColor`, `position`,
-`version`, `button`, `texts`).
+`version`, `button`, `texts`, `eventName`).
 
-Wersje są przypięte tagami, np. `https://cdn.jsdelivr.net/gh/combomarketingpl/combo-zgody@1.0.0/combo-zgody.js`.
+Wersje są przypięte tagami, np. `https://cdn.jsdelivr.net/gh/combomarketingpl/combo-zgody@1.0.1/combo-zgody.js`.
 
 Licencja: MIT.
