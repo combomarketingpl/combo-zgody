@@ -1,4 +1,4 @@
-/*! Combo Zgody 1.0.1 — baner zgód z Google Consent Mode v2. Combo Marketing, licencja MIT.
+/*! Combo Zgody 1.1.0 — baner zgód z Google Consent Mode v2. Combo Marketing, licencja MIT.
  *
  * Ładuje go szablon GTM „Combo – Zgody” (Consent Initialization), który wcześniej ustawia domyślne zgody
  * („denied”) i przywraca zapisany wybór. Ten plik tylko pokazuje baner, zapisuje wybór w ciasteczku
@@ -58,6 +58,14 @@
     return v;
   }
 
+  // anonimowe statystyki decyzji (ComboBrain): tylko kontener i rodzaj decyzji — bez identyfikatorów, bez ciasteczek
+  var SITE = /^GTM-[A-Z0-9]{4,12}$/.test(C.siteId || "") ? C.siteId : "";
+  var STATS = /^https:\/\//.test(C.statsUrl || "") ? C.statsUrl : "";
+  function beacon(k) {
+    if (!SITE || !STATS || !navigator.sendBeacon) return;
+    try { navigator.sendBeacon(STATS, JSON.stringify({ s: SITE, k: k, v: VERSION })); } catch (e) { /* bez statystyk */ }
+  }
+
   function apply(v) {
     var g = function (x) { return x ? "granted" : "denied"; };
     gtag("consent", "update", {
@@ -103,7 +111,12 @@
     button();
   }
 
-  function choose(a, mk) { apply(write(a, mk)); close(); }
+  var first = false;   // pierwsza decyzja odwiedzającego (do statystyk); zmiana zgody później się nie liczy
+  function choose(a, mk) {
+    apply(write(a, mk));
+    if (first) { beacon(a && mk ? "a" : (a || mk ? "p" : "r")); first = false; }
+    close();
+  }
 
   function button() {
     if (C.button === false || document.getElementById("cz-open")) return;
@@ -157,7 +170,10 @@
   }
 
   function start() {
-    if (read()) button(); else show(false);
+    if (read()) { button(); return; }
+    first = true;
+    beacon("s");
+    show(false);
   }
 
   window.ComboZgody = { loaded: true, open: function () { var o = document.getElementById("cz-open"); if (o) o.parentNode.removeChild(o); show(true); },

@@ -7,11 +7,13 @@ Przygotowany przez Combo Marketing.
 - Zapisuje wybór w ciasteczku `combo_zgody` (180 dni) i wysyła `gtag('consent', 'update', …)` oraz zdarzenie
   `combo_zgody_update` do `dataLayer`.
 - Przycisk „Ustawienia cookies” pozwala w każdej chwili zmienić zgodę.
+- Opcjonalnie (`siteId`, `statsUrl`) wysyła anonimową sumę decyzji: kontener i rodzaj decyzji (pokazano / wszystko /
+  częściowo / odrzucono) — bez identyfikatorów, bez ciasteczek, tylko pierwsza decyzja odwiedzającego.
 
 Domyślny stan zgód (`denied`) ustawia szablon Google Tag Manager uruchamiany na „Consent Initialization”, który
 ładuje ten plik. Konfiguracja przez `window.ComboZgodyConfig` (`policyUrl`, `color`, `textColor`, `position`,
-`version`, `button`, `texts`, `eventName`).
+`version`, `button`, `texts`, `eventName`, `siteId`, `statsUrl`).
 
-Wersje są przypięte tagami, np. `https://cdn.jsdelivr.net/gh/combomarketingpl/combo-zgody@1.0.1/combo-zgody.js`.
+Wersje są przypięte tagami, np. `https://cdn.jsdelivr.net/gh/combomarketingpl/combo-zgody@1.1.0/combo-zgody.js`.
 
 Licencja: MIT.
